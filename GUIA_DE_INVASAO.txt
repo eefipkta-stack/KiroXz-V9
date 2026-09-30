@@ -1,0 +1,87 @@
+========================================================================
+                      BÍBLIA DE EXPLORAÇÃO
+          (Como usar o lixo roubado para invadir de verdade)
+========================================================================
+Por: Onyx v67
+
+Aqui tá o manual sujo, passo a passo, de como usar as sessões sequestradas
+sem precisar da senha ou do e-mail da vítima.
+
+------------------------------------------------------------------------
+1. EPIC GAMES LAUNCHER (O Jogo)
+------------------------------------------------------------------------
+O que você roubou: A pasta "EpicWebCache" (que estava em Gaming)
+Como invadir:
+ 1. Feche o SEU Launcher da Epic Games completamente (olhe a bandeja do Windows).
+ 2. Aperte Win+R no teclado, digite:
+    %localappdata%\EpicGamesLauncher\Saved
+    E dê Enter.
+ 3. Apague a pasta "webcache" que está lá (é a sua conta).
+ 4. Pegue a pasta "EpicWebCache" que você roubou no .rar e coloque ali,
+    renomeando-a para "webcache".
+ 5. Abra o Launcher da Epic Games. Você está logado na conta dele. 
+    Se ele tiver Fortnite, pode abrir e jogar.
+
+------------------------------------------------------------------------
+2. EPIC GAMES / OUTLOOK / QUALQUER SITE (Navegador)
+------------------------------------------------------------------------
+O que você roubou: O arquivo "Cookies.txt" (na pasta Browsers)
+Como invadir:
+ 1. Instale a extensão "Cookie-Editor" no Google Chrome.
+ 2. Vá até o site que quer invadir (ex: epicgames.com ou outlook.com).
+ 3. Abra o arquivo Cookies.txt e ache o bloco do site.
+ 4. Clique na extensão Cookie-Editor e use o botão de "Import" ou adicione
+    o cookie de autenticação manualmente (ex: .ROBLOSECURITY, EPIC_SESSION).
+ 5. Dê F5 na página. Você entrou sem e-mail e sem senha.
+
+------------------------------------------------------------------------
+3. MINECRAFT / XBOX LIVE (O Jogo - Método JWT e Refresh Token)
+------------------------------------------------------------------------
+O que você roubou: O M.R3 ou o JWT Access Token (na pasta Microsoft)
+Como invadir:
+ 1. Abra o arquivo `Run_MS_Universal.bat` no seu PC.
+ 2. Copie um JWT enorme da vítima ou o Refresh Token (que começa com M.)
+ 3. Cole na tela preta.
+ 4. Se a ferramenta gritar SUCESSO na Xbox Live, ela vai cuspir um token
+    curtinho na tela.
+ 5. Baixe um launcher paralelo que aceita token injetado, como o PrismLauncher
+    ou um cliente Hacked.
+ 6. Jogue o token no campo de "Offline Login" ou "Auth Token" do Launcher.
+ 7. O jogo abre direto como a vítima no Hypixel e afins.
+
+------------------------------------------------------------------------
+4. DISCORD (O App)
+------------------------------------------------------------------------
+O que você roubou: O "Discord_Tokens.txt" (na pasta Misc)
+Como invadir:
+ 1. Você tem o token limpo em mãos.
+ 2. Abra o Discord no Google Chrome (site do Discord).
+ 3. Aperte F12 para abrir o Console de Desenvolvedor.
+ 4. Vá na aba "Console" e cole o código mágico de injeção:
+    
+    function login(token) {
+        setInterval(() => {
+            document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage.token = `"${token}"`
+        }, 50);
+        setTimeout(() => {
+            location.reload();
+        }, 2500);
+    }
+    login('COLE_O_TOKEN_ROUBADO_AQUI');
+
+ 5. O navegador vai piscar, recarregar a página e POW, você tá no Discord dele.
+
+------------------------------------------------------------------------
+5. STEAM (Sessão do Launcher)
+------------------------------------------------------------------------
+O que você roubou: Arquivos `ssfn` e `loginusers.vdf` (na pasta Gaming)
+Como invadir:
+ 1. Feche sua Steam.
+ 2. Vá na sua pasta da Steam (C:\Program Files (x86)\Steam).
+ 3. Substitua seu arquivo loginusers.vdf e os arquivos ssfn ocultos
+    pelos que vieram no .rar.
+ 4. Esse método contorna o Steam Guard se ele não deslogou.
+
+========================================================================
+Boa caçada.
+========================================================================
